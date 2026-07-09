@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Créer un compte — Soirée Gala INSPEI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="bg-atmosphere"></div>
+<div class="bg-circuits"></div>
+<div class="bg-stars"></div>
+
+<div class="auth-wrap">
+  <div class="auth-card">
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:8px;color:var(--gold);font-size:.85rem;margin-bottom:20px;"><i class="fa-solid fa-arrow-left"></i> Retour à l'accueil</a>
+    <h1>Créer votre compte</h1>
+    <p class="sub">Nécessaire pour soumettre votre projet à la soirée gala.</p>
+
+    <div id="alertBox"></div>
+
+    <form id="registerForm" novalidate>
+      <div class="field" id="f-name">
+        <label for="name">Nom complet</label>
+        <div class="input-wrap">
+          <i class="fa-solid fa-user"></i>
+          <input type="text" id="name" name="name" placeholder="Ex : Ornel Quenum" autocomplete="name" required>
+        </div>
+        <div class="field-error">Veuillez entrer votre nom complet.</div>
+      </div>
+
+      <div class="field" id="f-email">
+        <label for="email">Adresse email</label>
+        <div class="input-wrap">
+          <i class="fa-solid fa-envelope"></i>
+          <input type="email" id="email" name="email" placeholder="vous@exemple.com" autocomplete="email" required>
+        </div>
+        <div class="field-error">Veuillez entrer un email valide.</div>
+      </div>
+
+      <div class="field" id="f-phone">
+        <label for="phone">Téléphone (WhatsApp)</label>
+        <div class="input-wrap">
+          <i class="fa-solid fa-phone"></i>
+          <input type="tel" id="phone" name="phone" placeholder="+229 ..." autocomplete="tel" required>
+        </div>
+        <div class="field-error">Veuillez entrer un numéro valide.</div>
+      </div>
+
+      <div class="field" id="f-password">
+        <label for="password">Mot de passe</label>
+        <div class="input-wrap">
+          <i class="fa-solid fa-lock"></i>
+          <input type="password" id="password" name="password" placeholder="8 caractères minimum" autocomplete="new-password" required>
+          <button type="button" class="toggle-pass" data-target="password"><i class="fa-solid fa-eye"></i></button>
+        </div>
+        <div class="field-error">8 caractères minimum, avec au moins un chiffre.</div>
+      </div>
+
+      <div class="field" id="f-confirm">
+        <label for="confirm">Confirmer le mot de passe</label>
+        <div class="input-wrap">
+          <i class="fa-solid fa-lock"></i>
+          <input type="password" id="confirm" name="confirm" placeholder="Répétez le mot de passe" autocomplete="new-password" required>
+          <button type="button" class="toggle-pass" data-target="confirm"><i class="fa-solid fa-eye"></i></button>
+        </div>
+        <div class="field-error">Les mots de passe ne correspondent pas.</div>
+      </div>
+
+      <button type="submit" class="btn btn-gold btn-block" id="submitBtn">
+        <i class="fa-solid fa-user-plus"></i> Créer mon compte
+      </button>
+    </form>
+
+    <p class="auth-foot">Déjà inscrit ? <a href="login.html">Se connecter</a></p>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/main.js"></script>
+<script src="js/auth.js"></script>
+</body>
+</html>

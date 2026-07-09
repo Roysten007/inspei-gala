@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Administration</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+<div class="login-wrap">
+  <div class="login-card">
+    <div class="tag"><i class="fa-solid fa-shield-halved"></i> Accès restreint</div>
+    <h1>Tableau de bord</h1>
+    <div class="err" id="errBox"></div>
+    <form id="loginForm">
+      <input type="password" id="password" placeholder="Mot de passe administrateur" autocomplete="current-password" required>
+      <button type="submit" id="submitBtn">Entrer</button>
+    </form>
+  </div>
+</div>
+<script src="js/admin-config.js"></script>
+<script>
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const errBox = document.getElementById('errBox');
+  const btn = document.getElementById('submitBtn');
+  errBox.textContent = '';
+  btn.disabled = true; btn.textContent = 'Vérification…';
+  try {
+    const res = await fetch(`${API_BASE}api/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ password: document.getElementById('password').value }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.message || 'Échec de connexion.');
+    window.location.href = 'dashboard.html';
+  } catch (err) {
+    errBox.textContent = err.message;
+  } finally {
+    btn.disabled = false; btn.textContent = 'Entrer';
+  }
+});
+</script>
+</body>
+</html>

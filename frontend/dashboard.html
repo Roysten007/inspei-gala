@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mon espace — Soirée Gala INSPEI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="bg-atmosphere"></div>
+<div class="bg-circuits"></div>
+<div class="bg-stars"></div>
+
+<div class="topbar">
+  <div class="container">
+    <a href="index.html" class="brand">
+      <img src="assets/logo.png" alt="" onerror="this.style.display='none'">
+      <div class="brand-text"><b>Soirée Gala</b><span>INSPEI</span></div>
+    </a>
+    <div class="user-chip">
+      <div class="avatar" id="avatarInitial">?</div>
+      <span id="userName" style="font-size:.9rem; color:var(--ivory-dim);">Chargement…</span>
+      <button class="btn btn-ghost" id="logoutBtn" style="padding:9px 16px;"><i class="fa-solid fa-right-from-bracket"></i></button>
+    </div>
+  </div>
+</div>
+
+<div class="dash-wrap">
+  <div class="container">
+
+    <div class="dash-head reveal">
+      <h1>Votre soumission de projet</h1>
+      <p>Renseignez les informations ci-dessous. Vous pouvez revenir modifier votre soumission tant que la période reste ouverte. <span id="statusSlot"></span></p>
+    </div>
+
+    <div id="alertBox"></div>
+
+    <div class="form-card reveal">
+      <h2 class="card-title"><i class="fa-solid fa-file-signature"></i> Formulaire de soumission</h2>
+
+      <form id="submissionForm" novalidate>
+        <div class="form-row">
+          <div class="field" id="f-title">
+            <label for="title">Titre du projet</label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-heading"></i>
+              <input type="text" id="title" name="title" placeholder="Ex : Système de gestion intelligente..." required>
+            </div>
+            <div class="field-error">Le titre est requis.</div>
+          </div>
+          <div class="field" id="f-team">
+            <label for="team">Membres de l'équipe</label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-people-group"></i>
+              <input type="text" id="team" name="team" placeholder="Noms séparés par des virgules">
+            </div>
+          </div>
+        </div>
+
+        <div class="field" id="f-description">
+          <label for="description">Description du projet</label>
+          <div class="input-wrap">
+            <textarea id="description" name="description" placeholder="Décrivez l'objectif, la technologie utilisée et ce que vous allez présenter le jour du gala." required></textarea>
+          </div>
+          <div class="field-error">Une description d'au moins 30 caractères est requise.</div>
+        </div>
+
+        <div class="method-toggle">
+          <button type="button" class="active" data-method="link"><i class="fa-solid fa-link"></i> Lien</button>
+          <button type="button" data-method="file"><i class="fa-solid fa-file-zipper"></i> Fichier ZIP</button>
+          <button type="button" data-method="both"><i class="fa-solid fa-layer-group"></i> Les deux</button>
+        </div>
+
+        <div class="field" id="f-link">
+          <label for="link">Lien vers votre projet / plateforme</label>
+          <div class="input-wrap">
+            <i class="fa-solid fa-globe"></i>
+            <input type="url" id="link" name="link" placeholder="https://mon-projet.com">
+          </div>
+          <div class="field-error">Veuillez entrer une URL valide (https://...).</div>
+        </div>
+
+        <div class="field" id="f-file">
+          <label>Archive du projet (.zip, .rar, .7z — 100 Mo max)</label>
+          <div class="dropzone" id="dropzone">
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+            <p>Glissez-déposez votre fichier ici, ou cliquez pour parcourir</p>
+            <small>Formats acceptés : .zip, .rar, .7z</small>
+            <input type="file" id="fileInput" accept=".zip,.rar,.7z" hidden>
+          </div>
+          <div id="fileChipSlot"></div>
+          <div class="progress-bar" id="progressBar"><span></span></div>
+        </div>
+
+        <div class="helper-note">
+          <i class="fa-solid fa-shield-halved"></i>
+          <span>Vos données sont transmises de façon chiffrée et ne sont visibles que par l'équipe d'organisation de la soirée gala.</span>
+        </div>
+
+        <div style="margin-top:26px;">
+          <button type="submit" class="btn btn-gold btn-block" id="submitBtn">
+            <i class="fa-solid fa-paper-plane"></i> Envoyer ma soumission
+          </button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/main.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>

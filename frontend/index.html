@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Soirée Gala INSPEI — Soumettez votre projet</title>
+<meta name="description" content="Soirée Gala des étudiants de l'INSPEI : soumettez votre projet avant le jour J et présentez-le lors de la grande soirée.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="bg-atmosphere"></div>
+<div class="bg-circuits"></div>
+<div class="bg-stars"></div>
+
+<nav class="nav">
+  <div class="container">
+    <a href="index.html" class="brand">
+      <img src="assets/logo.png" alt="Logo INSPEI" onerror="this.style.display='none'">
+      <div class="brand-text">
+        <b>Soirée Gala</b>
+        <span>INSPEI · ABOMEY</span>
+      </div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#processus">Le processus</a></li>
+      <li><a href="#formats">Formats acceptés</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+    <div class="nav-actions" data-nav-auth>
+      <a href="login.html" class="btn btn-ghost">Se connecter</a>
+      <a href="register.html" class="btn btn-gold"><i class="fa-solid fa-paper-plane"></i> Soumettre un projet</a>
+    </div>
+    <button class="burger" aria-label="Menu" aria-expanded="false"><i class="fa-solid fa-bars"></i></button>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container hero-grid">
+    <div>
+      <span class="eyebrow"><i class="fa-solid fa-circle-dot"></i> Appel à projets ouvert</span>
+      <h1>La soirée <span class="grad">Gala des étudiants</span> de l'INSPEI se prépare</h1>
+      <p class="lead">
+        Chaque année, l'INSPEI réunit ses étudiants pour une grande soirée de gala où des projets sont présentés
+        devant tout le monde. Si vous avez un projet à présenter — plateforme, application, prototype, recherche —
+        c'est ici que vous le soumettez avant le jour J.
+      </p>
+      <div class="hero-ctas">
+        <a href="register.html" class="btn btn-gold"><i class="fa-solid fa-rocket"></i> Je soumets mon projet</a>
+        <a href="#processus" class="btn btn-ghost"><i class="fa-solid fa-circle-info"></i> Comprendre le processus</a>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="gala-card">
+        <h3><i class="fa-solid fa-hourglass-half"></i> Compte à rebours</h3>
+        <p>Avant la clôture des soumissions</p>
+        <div class="countdown" data-countdown="2026-07-15T23:59:00">
+          <div class="unit"><b data-unit="d">--</b><span>Jours</span></div>
+          <div class="unit"><b data-unit="h">--</b><span>Heures</span></div>
+          <div class="unit"><b data-unit="m">--</b><span>Min</span></div>
+          <div class="unit"><b data-unit="s">--</b><span>Sec</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="section" id="processus">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow"><i class="fa-solid fa-diagram-project"></i> Étapes</span>
+      <h2>Comment fonctionne la soumission</h2>
+      <p>Un parcours simple en quatre étapes, du compte à la présentation le jour du gala.</p>
+    </div>
+    <div class="timeline">
+      <div class="step">
+        <i class="icon fa-solid fa-user-plus"></i>
+        <div class="num">ÉTAPE 01</div>
+        <h3>Créer un compte</h3>
+        <p>Inscrivez-vous avec votre nom, votre email et un mot de passe pour accéder à votre espace personnel.</p>
+      </div>
+      <div class="step">
+        <i class="icon fa-solid fa-file-circle-plus"></i>
+        <div class="num">ÉTAPE 02</div>
+        <h3>Renseigner le projet</h3>
+        <p>Titre, description, membres de l'équipe : présentez votre projet clairement dans le formulaire.</p>
+      </div>
+      <div class="step">
+        <i class="icon fa-solid fa-cloud-arrow-up"></i>
+        <div class="num">ÉTAPE 03</div>
+        <h3>Joindre lien et/ou fichier</h3>
+        <p>Collez le lien de votre plateforme, déposez une archive .zip du projet, ou les deux.</p>
+      </div>
+      <div class="step">
+        <i class="icon fa-solid fa-champagne-glasses"></i>
+        <div class="num">ÉTAPE 04</div>
+        <h3>Présentez le jour J</h3>
+        <p>Votre soumission est enregistrée et transmise à l'organisation pour la soirée du gala.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="formats">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow"><i class="fa-solid fa-layer-group"></i> Souplesse</span>
+      <h2>Tous les types de projets sont acceptés</h2>
+      <p>Quel que soit le format de votre travail, il y a une manière de le soumettre.</p>
+    </div>
+    <div class="formats">
+      <div class="format-card reveal">
+        <i class="fa-solid fa-link"></i>
+        <h4>Un lien</h4>
+        <p>Votre plateforme est en ligne ? Collez simplement son URL dans le formulaire.</p>
+      </div>
+      <div class="format-card reveal">
+        <i class="fa-solid fa-file-zipper"></i>
+        <h4>Une archive ZIP</h4>
+        <p>Déposez le code source, un rapport ou tout autre livrable en fichier compressé (jusqu'à 100 Mo).</p>
+      </div>
+      <div class="format-card reveal">
+        <i class="fa-solid fa-layer-group"></i>
+        <h4>Les deux ensembles</h4>
+        <p>Vous pouvez fournir un lien ET un fichier pour donner le maximum de contexte à votre projet.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="faq">
+  <div class="container" style="max-width:760px">
+    <div class="section-head reveal">
+      <span class="eyebrow"><i class="fa-solid fa-circle-question"></i> Questions fréquentes</span>
+      <h2>Tout ce qu'il faut savoir</h2>
+    </div>
+    <div class="reveal">
+      <div class="faq-item">
+        <button class="faq-q">Qui peut soumettre un projet ? <i class="fa-solid fa-chevron-down"></i></button>
+        <div class="faq-a"><div class="faq-a-inner">Tout étudiant ou équipe intéressé par la présentation d'un projet lors de la soirée gala. Un compte est nécessaire pour soumettre.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Puis-je modifier ma soumission après l'avoir envoyée ? <i class="fa-solid fa-chevron-down"></i></button>
+        <div class="faq-a"><div class="faq-a-inner">Oui, tant que la période de soumission est ouverte, vous pouvez revenir sur votre espace et mettre à jour votre projet.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Quelle taille de fichier est acceptée ? <i class="fa-solid fa-chevron-down"></i></button>
+        <div class="faq-a"><div class="faq-a-inner">Les archives .zip jusqu'à 100 Mo sont acceptées. Au-delà, privilégiez un lien vers votre plateforme ou votre dépôt.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Comment saurai-je que ma soumission est bien reçue ? <i class="fa-solid fa-chevron-down"></i></button>
+        <div class="faq-a"><div class="faq-a-inner">Votre espace personnel affiche en temps réel le statut de votre soumission, avec un accusé de réception après l'envoi.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="brand" style="margin-bottom:12px">
+          <img src="assets/logo.png" alt="" onerror="this.style.display='none'">
+          <div class="brand-text"><b>Soirée Gala INSPEI</b><span>Institut National Supérieur des Classes Préparatoires aux Études d'Ingénieurs</span></div>
+        </div>
+        <p style="color:var(--ivory-dim); max-width:38ch; font-size:.88rem;">La fête la plus attendue de l'année se prépare. Restez à l'écoute.</p>
+      </div>
+      <div class="footer-contact">
+        <a href="https://wa.me/2290191223478"><i class="fa-brands fa-whatsapp"></i> +229 01 91 22 34 78</a>
+        <a href="tel:+2290147335455"><i class="fa-solid fa-phone"></i> +229 01 47 33 54 55</a>
+        <a href="mailto:ornelquenum388@gmail.com"><i class="fa-solid fa-envelope"></i> ornelquenum388@gmail.com</a>
+      </div>
+    </div>
+    <div class="footer-bottom">&copy; 2026 INSPEI Abomey — Soirée Gala des étudiants</div>
+  </div>
+</footer>
+
+<script src="js/api.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
