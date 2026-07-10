@@ -33,11 +33,11 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     const res = await fetch(`${API_BASE}api/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
       body: JSON.stringify({ password: document.getElementById('password').value }),
     });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data.message || 'Échec de connexion.');
+    localStorage.setItem('inspeiGalaAdminToken', data.token);
     window.location.href = 'dashboard.html';
   } catch (err) {
     errBox.textContent = err.message;

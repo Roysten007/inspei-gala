@@ -69,7 +69,8 @@ if (registerForm) {
     const btn = document.getElementById('submitBtn');
     setLoading(btn, true);
     try {
-      await api.post('/api/auth/register', { name, email, phone, password });
+      const data = await api.post('/api/auth/register', { name, email, phone, password });
+      window.authToken.set(data.token);
       Toast.show('Compte créé avec succès. Bienvenue !', 'success');
       window.location.href = 'dashboard.html';
     } catch (err) {
@@ -98,7 +99,8 @@ if (loginForm) {
     const btn = document.getElementById('submitBtn');
     setLoading(btn, true);
     try {
-      await api.post('/api/auth/login', { email, password });
+      const data = await api.post('/api/auth/login', { email, password });
+      window.authToken.set(data.token);
       window.location.href = 'dashboard.html';
     } catch (err) {
       showAlert(err.message || "Email ou mot de passe incorrect.");

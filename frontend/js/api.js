@@ -1,29 +1,35 @@
 /* =========================================================
    Tiny API client.
-   - Sends/receives httpOnly cookies (credentials: 'include')
-   - Attaches CSRF token on unsafe methods
-   - Normalizes error handling
+   - Sends the session token as "Authorization: Bearer <token>"
+   - The token is stored in localStorage (frontend and backend
+     live on different domains, so cookies are not a reliable
+     option here — see js/dashboard.js guardAndLoad for context)
    Configure API_BASE to point at your deployed backend.
    ========================================================= */
 const API_BASE = window.__API_BASE__ || 'https://inspei-gala-production.up.railway.app';
 
-function getCsrfToken() {
-  const match = document.cookie.match(/(?:^|; )csrfToken=([^;]+)/);
-  return match ? decodeURIComponent(match[1]) : null;
+const TOKEN_KEY = 'inspeiGalaToken';
+
+function getToken() {
+  return localStorage.getItem(TOKEN_KEY);
 }
+function setToken(token) {
+  if (token) localStorage.setItem(TOKEN_KEY, token);
+}
+function clearToken() {
+  localStorage.removeItem(TOKEN_KEY);
+}
+window.authToken = { get: getToken, set: setToken, clear: clearToken };
 
 async function request(path, { method = 'GET', body, isFormData = false } = {}) {
   const headers = {};
   if (!isFormData) headers['Content-Type'] = 'application/json';
-  if (method !== 'GET') {
-    const token = getCsrfToken();
-    if (token) headers['X-CSRF-Token'] = token;
-  }
+  const token = getToken();
+  if (token) headers['Authorization'] = `Bearer ${token}`;
 
   const res = await fetch(`${API_BASE}${path}`, {
     method,
     headers,
-    credentials: 'include',
     body: isFormData ? body : body ? JSON.stringify(body) : undefined,
   });
 
@@ -53,9 +59,8 @@ const api = {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       xhr.open('POST', `${API_BASE}${path}`);
-      xhr.withCredentials = true;
-      const token = getCsrfToken();
-      if (token) xhr.setRequestHeader('X-CSRF-Token', token);
+      const token = getToken();
+      if (token) xhr.setRequestHeader('Authorization', `Bearer ${token}`);
 
       xhr.upload.onprogress = (e) => {
         if (onProgress && e.lengthComputable) {

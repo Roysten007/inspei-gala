@@ -1,3 +1,9 @@
+/* =========================================================
+   Shared UI behaviors (no framework needed for this layer —
+   kept in dependency-free vanilla JS for maximum performance).
+   ========================================================= */
+
+// ---------- Toast system (used across all pages) ----------
 const Toast = (() => {
   let stack;
   function ensureStack(){

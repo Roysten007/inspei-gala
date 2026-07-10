@@ -5,7 +5,6 @@ const { body, validationResult } = require('express-validator');
 
 const Submission = require('../models/Submission');
 const requireAuth = require('../middleware/auth');
-const verifyCsrf = require('../middleware/csrf');
 const { upload, UPLOAD_DIR } = require('../middleware/upload');
 
 const router = express.Router();
@@ -43,7 +42,6 @@ router.get('/me', requireAuth, async (req, res, next) => {
 router.post(
   '/',
   requireAuth,
-  verifyCsrf,
   upload.single('file'),
   [
     body('title').trim().isLength({ min: 3, max: 150 }).withMessage('Titre invalide (3 à 150 caractères).'),

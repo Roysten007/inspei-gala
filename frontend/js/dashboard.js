@@ -1,6 +1,6 @@
 /* =========================================================
    Dashboard: guarded page. Redirects to login if the session
-   cookie is missing/expired (server is the real authority —
+   token is missing/expired (server is the real authority —
    every API call below is re-checked server-side too).
    ========================================================= */
 
@@ -35,6 +35,7 @@ async function guardAndLoad() {
     document.getElementById('userName').textContent = user.name;
     document.getElementById('avatarInitial').textContent = user.name.trim()[0].toUpperCase();
   } catch (err) {
+    window.authToken.clear();
     window.location.href = 'login.html';
     return;
   }
@@ -179,6 +180,7 @@ const logoutBtn = document.getElementById('logoutBtn');
 if (logoutBtn) {
   logoutBtn.addEventListener('click', async () => {
     try { await api.post('/api/auth/logout'); } catch (_) {}
+    window.authToken.clear();
     window.location.href = 'index.html';
   });
 }

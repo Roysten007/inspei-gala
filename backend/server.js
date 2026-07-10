@@ -3,7 +3,6 @@ require('dotenv').config();
 const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
-const cookieParser = require('cookie-parser');
 const compression = require('compression');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
@@ -27,7 +26,7 @@ if (missing.length) {
 const app = express();
 
 // Needed on platforms like Render/Railway/Heroku behind a reverse proxy,
-// so req.ip and secure cookies behave correctly.
+// so req.ip is correct for rate limiting.
 app.set('trust proxy', 1);
 
 app.use(helmet());
@@ -42,12 +41,10 @@ app.use(
       if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
       callback(new Error('Origine non autorisée par la politique CORS.'));
     },
-    credentials: true,
   })
 );
 
 app.use(express.json({ limit: '20kb' })); // submissions carry the file separately via multipart
-app.use(cookieParser());
 
 // Global safety-net rate limit, on top of the stricter per-route limiters.
 app.use(

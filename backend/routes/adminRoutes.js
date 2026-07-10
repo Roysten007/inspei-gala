@@ -6,13 +6,10 @@ const { body, validationResult } = require('express-validator');
 
 const Submission = require('../models/Submission');
 const requireAdmin = require('../middleware/adminAuth');
-const verifyAdminCsrf = require('../middleware/adminCsrf');
-const { signAdminToken, generateCsrfToken } = require('../utils/tokens');
-const { authCookieOptions, csrfCookieOptions } = require('../utils/cookies');
+const { signAdminToken } = require('../utils/tokens');
 const { UPLOAD_DIR } = require('../middleware/upload');
 
 const router = express.Router();
-const TWELVE_HOURS_MS = 12 * 60 * 60 * 1000;
 
 // Deliberately strict: this endpoint guards the entire submissions database.
 const adminLoginLimiter = rateLimit({
@@ -62,10 +59,7 @@ router.post(
       }
 
       const token = signAdminToken();
-      const csrfToken = generateCsrfToken();
-      res.cookie('adminToken', token, authCookieOptions(TWELVE_HOURS_MS));
-      res.cookie('adminCsrfToken', csrfToken, csrfCookieOptions(TWELVE_HOURS_MS));
-      res.json({ message: 'Connecté.' });
+      res.json({ token });
     } catch (err) {
       next(err);
     }
@@ -73,9 +67,7 @@ router.post(
 );
 
 // ---------- POST /logout ----------
-router.post('/logout', verifyAdminCsrf, (req, res) => {
-  res.clearCookie('adminToken', { path: '/' });
-  res.clearCookie('adminCsrfToken', { path: '/' });
+router.post('/logout', requireAdmin, (req, res) => {
   res.json({ message: 'Déconnecté.' });
 });
 
@@ -98,7 +90,6 @@ router.get('/submissions', requireAdmin, async (req, res, next) => {
 router.patch(
   '/submissions/:id',
   requireAdmin,
-  verifyAdminCsrf,
   [
     body('status').optional().isIn(['submitted', 'reviewed', 'selected']),
     body('adminNote').optional({ checkFalsy: true }).trim().isLength({ max: 1000 }),
@@ -123,6 +114,9 @@ router.patch(
 );
 
 // ---------- GET /submissions/:id/file (download) ----------
+// The frontend fetches this with the Authorization header attached and
+// triggers the download from the resulting blob (see admin-panel/js/admin.js),
+// since a plain link/window.open can't carry a custom header.
 router.get('/submissions/:id/file', requireAdmin, async (req, res, next) => {
   try {
     const submission = await Submission.findById(req.params.id);

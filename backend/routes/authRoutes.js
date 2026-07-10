@@ -5,13 +5,10 @@ const { body, validationResult } = require('express-validator');
 
 const User = require('../models/User');
 const requireAuth = require('../middleware/auth');
-const verifyCsrf = require('../middleware/csrf');
-const { signUserToken, generateCsrfToken } = require('../utils/tokens');
-const { authCookieOptions, csrfCookieOptions } = require('../utils/cookies');
+const { signUserToken } = require('../utils/tokens');
 
 const router = express.Router();
 
-const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 const MAX_FAILED_ATTEMPTS = 5;
 const LOCK_DURATION_MS = 15 * 60 * 1000; // 15 minutes
 
@@ -31,13 +28,6 @@ const registerLimiter = rateLimit({
   legacyHeaders: false,
   message: { message: 'Trop de comptes créés depuis cette adresse. Réessayez plus tard.' },
 });
-
-function issueSession(res, userId) {
-  const token = signUserToken(userId);
-  const csrfToken = generateCsrfToken();
-  res.cookie('token', token, authCookieOptions(SEVEN_DAYS_MS));
-  res.cookie('csrfToken', csrfToken, csrfCookieOptions(SEVEN_DAYS_MS));
-}
 
 // ---------- POST /api/auth/register ----------
 router.post(
@@ -66,9 +56,9 @@ router.post(
 
       const passwordHash = await bcrypt.hash(password, 12);
       const user = await User.createUser({ name, email, phone, passwordHash });
+      const token = signUserToken(user.id);
 
-      issueSession(res, user.id);
-      res.status(201).json({ user: { id: user.id, name: user.name, email: user.email } });
+      res.status(201).json({ token, user: { id: user.id, name: user.name, email: user.email } });
     } catch (err) {
       next(err);
     }
@@ -115,8 +105,8 @@ router.post(
 
       await User.resetLoginAttempts(user.id);
 
-      issueSession(res, user.id);
-      res.json({ user: { id: user.id, name: user.name, email: user.email } });
+      const token = signUserToken(user.id);
+      res.json({ token, user: { id: user.id, name: user.name, email: user.email } });
     } catch (err) {
       next(err);
     }
@@ -124,9 +114,9 @@ router.post(
 );
 
 // ---------- POST /api/auth/logout ----------
-router.post('/logout', verifyCsrf, (req, res) => {
-  res.clearCookie('token', { path: '/' });
-  res.clearCookie('csrfToken', { path: '/' });
+// Stateless tokens: logout is really just "forget the token" on the client.
+// This endpoint exists for a consistent API shape / future token blacklisting if needed.
+router.post('/logout', requireAuth, (req, res) => {
   res.json({ message: 'Déconnecté.' });
 });
 

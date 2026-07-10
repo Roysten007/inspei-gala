@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const crypto = require('crypto');
 
 function signUserToken(userId) {
   return jwt.sign({ sub: userId, role: 'user' }, process.env.JWT_SECRET, {
@@ -13,8 +12,4 @@ function signAdminToken() {
   });
 }
 
-function generateCsrfToken() {
-  return crypto.randomBytes(32).toString('hex');
-}
-
-module.exports = { signUserToken, signAdminToken, generateCsrfToken };
+module.exports = { signUserToken, signAdminToken };

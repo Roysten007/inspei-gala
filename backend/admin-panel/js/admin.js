@@ -1,18 +1,18 @@
 let ALL_SUBMISSIONS = [];
 
-function getAdminCsrf() {
-  const m = document.cookie.match(/(?:^|; )adminCsrfToken=([^;]+)/);
-  return m ? decodeURIComponent(m[1]) : null;
+const ADMIN_TOKEN_KEY = 'inspeiGalaAdminToken';
+function getAdminToken() {
+  return localStorage.getItem(ADMIN_TOKEN_KEY);
 }
 
 async function api(path, opts = {}) {
   const headers = { 'Content-Type': 'application/json' };
-  if (opts.method && opts.method !== 'GET') {
-    const token = getAdminCsrf();
-    if (token) headers['X-Admin-CSRF-Token'] = token;
-  }
-  const res = await fetch(`${API_BASE}api/${path}`, { credentials: 'include', headers, ...opts });
+  const token = getAdminToken();
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+
+  const res = await fetch(`${API_BASE}api/${path}`, { headers, ...opts });
   if (res.status === 401) {
+    localStorage.removeItem(ADMIN_TOKEN_KEY);
     window.location.href = 'login.html';
     throw new Error('Non authentifié');
   }
@@ -46,7 +46,7 @@ function renderTable(list) {
       <td data-label="Projet"><b>${esc(s.title)}</b><br><span style="color:var(--ivory-dim);font-size:.8rem;">${esc(s.team || '')}</span></td>
       <td data-label="Participant">${esc(s.user?.name || '—')}<br><span style="color:var(--ivory-dim);font-size:.8rem;">${esc(s.user?.email || '')} · ${esc(s.user?.phone || '')}</span></td>
       <td data-label="Lien" class="link-cell">${s.projectLink ? `<a href="${esc(s.projectLink)}" target="_blank" rel="noopener noreferrer">Ouvrir <i class="fa-solid fa-arrow-up-right-from-square"></i></a>` : '—'}</td>
-      <td data-label="Fichier">${s.fileStoredName ? `<button class="mini-btn" onclick="downloadFile('${s.id}')"><i class="fa-solid fa-download"></i> ${esc(s.fileOriginalName || 'fichier')}</button>` : '—'}</td>
+      <td data-label="Fichier">${s.fileStoredName ? `<button class="mini-btn" onclick="downloadFile('${s.id}', '${esc(s.fileOriginalName || 'fichier')}')"><i class="fa-solid fa-download"></i> ${esc(s.fileOriginalName || 'fichier')}</button>` : '—'}</td>
       <td data-label="Statut">
         <select class="status-select" onchange="updateStatus('${s.id}', this.value)">
           <option value="submitted" ${s.status === 'submitted' ? 'selected' : ''}>Soumis</option>
@@ -99,15 +99,32 @@ async function updateStatus(id, status) {
   }
 }
 
-function downloadFile(id) {
-  // Direct navigation so the browser handles the file download with the auth cookie.
-  window.open(`${API_BASE}api/submissions/${id}/file`, '_blank');
+async function downloadFile(id, filename) {
+  try {
+    const token = getAdminToken();
+    const res = await fetch(`${API_BASE}api/submissions/${id}/file`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
+    if (!res.ok) throw new Error('Téléchargement impossible.');
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename || 'projet.zip';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+  } catch (err) {
+    alert(err.message);
+  }
 }
 
 document.getElementById('search').addEventListener('input', applyFilters);
 document.getElementById('statusFilter').addEventListener('change', applyFilters);
 document.getElementById('logoutBtn').addEventListener('click', async () => {
   try { await api('logout', { method: 'POST' }); } catch (_) {}
+  localStorage.removeItem(ADMIN_TOKEN_KEY);
   window.location.href = 'login.html';
 });
 
