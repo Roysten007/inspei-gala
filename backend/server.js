@@ -35,6 +35,7 @@ app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 
 const allowedOrigins = (process.env.CLIENT_ORIGINS || '').split(',').map((s) => s.trim()).filter(Boolean);
 app.use(
+  '/api',
   cors({
     origin(origin, callback) {
       // Allow non-browser tools (no origin header) and configured origins only.
