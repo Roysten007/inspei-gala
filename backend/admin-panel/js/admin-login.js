@@ -13,7 +13,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     const data = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(data.message || 'Échec de connexion.');
     localStorage.setItem('inspeiGalaAdminToken', data.token);
-    window.location.href = 'backend/admin-panel/dashboard.html';
+    window.location.href = 'dashboard.html';
   } catch (err) {
     errBox.textContent = err.message;
   } finally {
