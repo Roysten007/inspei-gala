@@ -46,9 +46,9 @@ function renderTable(list) {
       <td data-label="Projet"><b>${esc(s.title)}</b><br><span style="color:var(--ivory-dim);font-size:.8rem;">${esc(s.team || '')}</span></td>
       <td data-label="Participant">${esc(s.user?.name || '—')}<br><span style="color:var(--ivory-dim);font-size:.8rem;">${esc(s.user?.email || '')} · ${esc(s.user?.phone || '')}</span></td>
       <td data-label="Lien" class="link-cell">${s.projectLink ? `<a href="${esc(s.projectLink)}" target="_blank" rel="noopener noreferrer">Ouvrir <i class="fa-solid fa-arrow-up-right-from-square"></i></a>` : '—'}</td>
-      <td data-label="Fichier">${s.fileStoredName ? `<button class="mini-btn" onclick="downloadFile('${s.id}', '${esc(s.fileOriginalName || 'fichier')}')"><i class="fa-solid fa-download"></i> ${esc(s.fileOriginalName || 'fichier')}</button>` : '—'}</td>
+      <td data-label="Fichier">${s.fileStoredName ? `<button class="mini-btn" data-action="download" data-id="${s.id}" data-filename="${esc(s.fileOriginalName || 'fichier')}"><i class="fa-solid fa-download"></i> ${esc(s.fileOriginalName || 'fichier')}</button>` : '—'}</td>
       <td data-label="Statut">
-        <select class="status-select" onchange="updateStatus('${s.id}', this.value)">
+        <select class="status-select" data-action="status" data-id="${s.id}">
           <option value="submitted" ${s.status === 'submitted' ? 'selected' : ''}>Soumis</option>
           <option value="reviewed" ${s.status === 'reviewed' ? 'selected' : ''}>Examiné</option>
           <option value="selected" ${s.status === 'selected' ? 'selected' : ''}>Sélectionné</option>
@@ -126,6 +126,16 @@ document.getElementById('logoutBtn').addEventListener('click', async () => {
   try { await api('logout', { method: 'POST' }); } catch (_) {}
   localStorage.removeItem(ADMIN_TOKEN_KEY);
   window.location.href = 'login.html';
+});
+
+// Event delegation for dynamically rendered table actions (CSP blocks inline onclick/onchange).
+document.getElementById('tableWrap').addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-action="download"]');
+  if (btn) downloadFile(btn.dataset.id, btn.dataset.filename);
+});
+document.getElementById('tableWrap').addEventListener('change', (e) => {
+  const select = e.target.closest('[data-action="status"]');
+  if (select) updateStatus(select.dataset.id, select.value);
 });
 
 loadSubmissions();
