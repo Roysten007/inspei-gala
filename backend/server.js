@@ -33,13 +33,19 @@ app.use(helmet());
 app.use(compression());
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 
-const allowedOrigins = (process.env.CLIENT_ORIGINS || '').split(',').map((s) => s.trim()).filter(Boolean);
+const allowedOrigins = (process.env.CLIENT_ORIGINS || '')
+  .split(',')
+  .map((s) => s.trim().replace(/\/+$/, '')) // strip a trailing slash, a common source of silent mismatches
+  .filter(Boolean);
+
 app.use(
   '/api',
   cors({
     origin(origin, callback) {
       // Allow non-browser tools (no origin header) and configured origins only.
-      if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
+      const normalizedOrigin = origin ? origin.replace(/\/+$/, '') : origin;
+      if (!normalizedOrigin || allowedOrigins.includes(normalizedOrigin)) return callback(null, true);
+      console.warn(`[CORS] Origine rejetée : "${origin}" — origines autorisées : ${allowedOrigins.join(', ') || '(aucune configurée)'}`);
       callback(new Error('Origine non autorisée par la politique CORS.'));
     },
   })
