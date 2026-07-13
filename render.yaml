@@ -34,7 +34,7 @@ services:
       - key: ADMIN_ROUTE_SECRET
         value: portal-9k2fq7x
       - key: ADMIN_PASSWORD_HASH
-        value: $2a$12$6NlXJm.Qd2XJgRUX7q6BHe3BfZK.6kF1G5Gk.b2GqI3G/bH7W1x22
+        value: $2a$12$kWi6Fo6Guk89cGIUTf7G6eya2q1K6PvaXt99AAvsvkhEQFHTCfM4e
       - key: ADMIN_JWT_SECRET
         generateValue: true
       - key: ADMIN_JWT_EXPIRES_IN
