@@ -1,0 +1,47 @@
+services:
+  - type: web
+    name: inspei-gala-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 4000
+      - key: NODE_ENV
+        value: production
+      # CORS wildcard allows connecting from Vercel deployments out-of-the-box
+      - key: CLIENT_ORIGINS
+        value: "*"
+      # Clever Cloud Database connection configuration
+      - key: DB_HOST
+        value: b8uvwvvmeseb7usm7wec-mysql.services.clever-cloud.com
+      - key: DB_PORT
+        value: 3306
+      - key: DB_USER
+        value: uhvqs5dod3eurx2s
+      - key: DB_PASSWORD
+        value: 0oah27btnHKtYioqh8Q9
+      - key: DB_NAME
+        value: b8uvwvvmeseb7usm7wec
+      # Auth configuration
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      # Admin configurations (Admin password is 'adminINSPEIGala2026!')
+      - key: ADMIN_ROUTE_SECRET
+        value: portal-9k2fq7x
+      - key: ADMIN_PASSWORD_HASH
+        value: $2a$12$6NlXJm.Qd2XJgRUX7q6BHe3BfZK.6kF1G5Gk.b2GqI3G/bH7W1x22
+      - key: ADMIN_JWT_SECRET
+        generateValue: true
+      - key: ADMIN_JWT_EXPIRES_IN
+        value: 12h
+      # Upload limits and deadline
+      - key: MAX_FILE_SIZE_MB
+        value: 100
+      - key: UPLOAD_DIR
+        value: uploads
+      - key: SUBMISSION_DEADLINE
+        value: 2026-07-15T23:59:00.000Z

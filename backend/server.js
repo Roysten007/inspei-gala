@@ -42,9 +42,16 @@ app.use(
   '/api',
   cors({
     origin(origin, callback) {
-      // Allow non-browser tools (no origin header) and configured origins only.
+      // Allow non-browser tools (no origin header), wildcards, Vercel deployments, and configured origins.
       const normalizedOrigin = origin ? origin.replace(/\/+$/, '') : origin;
-      if (!normalizedOrigin || allowedOrigins.includes(normalizedOrigin)) return callback(null, true);
+      if (
+        !normalizedOrigin ||
+        allowedOrigins.includes('*') ||
+        allowedOrigins.includes(normalizedOrigin) ||
+        normalizedOrigin.endsWith('.vercel.app')
+      ) {
+        return callback(null, true);
+      }
       console.warn(`[CORS] Origine rejetée : "${origin}" — origines autorisées : ${allowedOrigins.join(', ') || '(aucune configurée)'}`);
       callback(new Error('Origine non autorisée par la politique CORS.'));
     },

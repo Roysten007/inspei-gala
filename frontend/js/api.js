@@ -6,7 +6,7 @@
      option here — see js/dashboard.js guardAndLoad for context)
    Configure API_BASE to point at your deployed backend.
    ========================================================= */
-const API_BASE = window.__API_BASE__ || 'https://inspei-gala-production.up.railway.app';
+const API_BASE = window.__API_BASE__ || 'http://localhost:4000';
 
 const TOKEN_KEY = 'inspeiGalaToken';
 
