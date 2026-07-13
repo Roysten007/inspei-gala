@@ -81,6 +81,9 @@ app.use('/api/submissions', submissionRoutes);
 // from the backend itself (not the public frontend deploy), and is
 // blocked from indexing via robots.txt on the frontend.
 app.use(`/${process.env.ADMIN_ROUTE_SECRET}/api`, adminRoutes);
+app.get(`/${process.env.ADMIN_ROUTE_SECRET}`, (req, res) => {
+  res.redirect(`/${process.env.ADMIN_ROUTE_SECRET}/login.html`);
+});
 app.use(`/${process.env.ADMIN_ROUTE_SECRET}`, express.static(path.join(__dirname, 'admin-panel')));
 
 app.use(notFound);
