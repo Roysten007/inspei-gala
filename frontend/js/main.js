@@ -127,8 +127,14 @@ document.addEventListener('DOMContentLoaded', () => {
     api.get('/api/auth/me')
       .then(user => {
         navAuthSlot.innerHTML = `
-          <a href="dashboard.html" class="btn btn-gold"><i class="fa-solid fa-gauge"></i> Mon espace</a>
+          <a href="dashboard.html" class="btn btn-ghost"><i class="fa-solid fa-gauge"></i> Mon espace</a>
+          <a href="dashboard.html" class="btn btn-gold"><i class="fa-solid fa-pen-to-square"></i> Modifier mon projet</a>
         `;
+        const heroCta = document.querySelector('.hero-ctas a.btn-gold');
+        if (heroCta) {
+          heroCta.href = 'dashboard.html';
+          heroCta.innerHTML = `<i class="fa-solid fa-pen-to-square"></i> Modifier mon projet`;
+        }
       })
       .catch(() => { /* not logged in — keep default markup */ });
   }

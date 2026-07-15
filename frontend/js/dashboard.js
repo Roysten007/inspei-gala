@@ -8,6 +8,7 @@ const MAX_FILE_MB = 100;
 const ALLOWED_EXT = ['.zip', '.rar', '.7z'];
 let selectedFile = null;
 let currentMethod = 'link';
+let isEdit = false;
 
 function fmtSize(bytes) {
   if (bytes < 1024) return bytes + ' o';
@@ -44,6 +45,11 @@ async function guardAndLoad() {
     const { submission } = await api.get('/api/submissions/me');
     const statusSlot = document.getElementById('statusSlot');
     if (submission) {
+      isEdit = true;
+      const submitBtn = document.getElementById('submitBtn');
+      if (submitBtn) {
+        submitBtn.innerHTML = `<i class="fa-solid fa-pen-to-square"></i> Modifier mon projet`;
+      }
       statusSlot.innerHTML = `<span class="status-badge submitted"><i class="fa-solid fa-check"></i> Soumission enregistrée</span>`;
       document.getElementById('title').value = submission.title || '';
       document.getElementById('team').value = submission.team || '';
@@ -155,21 +161,22 @@ if (submissionForm) {
     const btn = document.getElementById('submitBtn');
     const progressBar = document.getElementById('progressBar');
     btn.disabled = true;
-    btn.innerHTML = '<i class="fa-solid fa-spinner"></i> Envoi en cours…';
+    btn.innerHTML = `<i class="fa-solid fa-spinner"></i> ${isEdit ? 'Modification en cours…' : 'Envoi en cours…'}`;
     progressBar.style.display = 'block';
 
     try {
       await api.postForm('/api/submissions', formData, (pct) => {
         progressBar.querySelector('span').style.width = pct + '%';
       });
-      Toast.show('Projet soumis avec succès !', 'success');
-      showAlert('Votre projet a bien été enregistré. Vous pouvez le modifier à tout moment tant que la soumission reste ouverte.', 'success');
+      Toast.show(isEdit ? 'Projet mis à jour avec succès !' : 'Projet soumis avec succès !', 'success');
+      showAlert(isEdit ? 'Votre projet a bien été modifié. Vous pouvez le modifier à tout moment tant que la soumission reste ouverte.' : 'Votre projet a bien été enregistré. Vous pouvez le modifier à tout moment tant que la soumission reste ouverte.', 'success');
+      isEdit = true;
       document.getElementById('statusSlot').innerHTML = `<span class="status-badge submitted"><i class="fa-solid fa-check"></i> Soumission enregistrée</span>`;
     } catch (err) {
       showAlert(err.message || "Échec de l'envoi. Réessayez.");
     } finally {
       btn.disabled = false;
-      btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Envoyer ma soumission';
+      btn.innerHTML = `<i class="fa-solid ${isEdit ? 'fa-pen-to-square' : 'fa-paper-plane'}"></i> ${isEdit ? 'Modifier mon projet' : 'Envoyer ma soumission'}`;
       setTimeout(() => { progressBar.style.display = 'none'; progressBar.querySelector('span').style.width = '0%'; }, 1200);
     }
   });

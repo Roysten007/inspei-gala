@@ -43,7 +43,19 @@ function renderTable(list) {
 
   const rows = list.map(s => `
     <tr>
-      <td data-label="Projet"><b>${esc(s.title)}</b><br><span style="color:var(--ivory-dim);font-size:.8rem;">${esc(s.team || '')}</span></td>
+      <td data-label="Projet">
+        <b>${esc(s.title)}</b>
+        ${s.team ? `<br><span style="color:var(--ivory-dim);font-size:.8rem;"><i class="fa-solid fa-people-group"></i> ${esc(s.team)}</span>` : ''}
+        <details class="proj-details" style="margin-top:8px;">
+          <summary style="font-size:.78rem;color:var(--gold);cursor:pointer;user-select:none;font-weight:500;">
+            <i class="fa-solid fa-file-lines"></i> Présentation & détails
+          </summary>
+          <div class="details-content" style="margin-top:6px;font-size:.82rem;color:var(--ivory-dim);background:rgba(0,0,0,.2);padding:10px;border-radius:6px;border:1px solid var(--border);white-space:pre-wrap;line-height:1.4;">
+            <strong>Présentation du projet :</strong>
+            <p style="margin:4px 0 0 0;font-style:italic;">${esc(s.description || 'Aucune description.')}</p>
+          </div>
+        </details>
+      </td>
       <td data-label="Participant">${esc(s.user?.name || '—')}<br><span style="color:var(--ivory-dim);font-size:.8rem;">${esc(s.user?.email || '')} · ${esc(s.user?.phone || '')}</span></td>
       <td data-label="Lien" class="link-cell">${s.projectLink ? `<a href="${esc(s.projectLink)}" target="_blank" rel="noopener noreferrer">Ouvrir <i class="fa-solid fa-arrow-up-right-from-square"></i></a>` : '—'}</td>
       <td data-label="Fichier">${s.fileStoredName ? `<button class="mini-btn" data-action="download" data-id="${s.id}" data-filename="${esc(s.fileOriginalName || 'fichier')}"><i class="fa-solid fa-download"></i> ${esc(s.fileOriginalName || 'fichier')}</button>` : '—'}</td>

@@ -67,6 +67,23 @@ select.status-select{ background:var(--panel-2); }
 .empty-state{ text-align:center; padding:60px 20px; color:var(--ivory-dim); }
 .loading{ text-align:center; padding:60px 20px; color:var(--ivory-dim); font-family:var(--font-mono); }
 
+/* ---- project details ---- */
+details.proj-details summary {
+  list-style: none;
+  outline: none;
+  transition: color 0.2s ease;
+}
+details.proj-details summary::-webkit-details-marker {
+  display: none;
+}
+details.proj-details summary:hover {
+  color: var(--gold-deep) !important;
+}
+details.proj-details[open] summary {
+  color: var(--gold-deep);
+  margin-bottom: 4px;
+}
+
 @media(max-width:800px){
   .stats{ grid-template-columns:1fr 1fr; }
   table, thead, tbody, tr, td, th{ display:block; }
