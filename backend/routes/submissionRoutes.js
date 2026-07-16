@@ -11,7 +11,7 @@ const router = express.Router();
 
 function submissionDeadlinePassed() {
   let deadline = process.env.SUBMISSION_DEADLINE;
-  const fallbackDeadline = '2026-07-17T11:59:00.000Z';
+  const fallbackDeadline = '2026-07-16T11:59:00.000Z';
   if (!deadline || new Date(deadline) < new Date(fallbackDeadline)) {
     deadline = fallbackDeadline;
   }
@@ -76,10 +76,21 @@ router.post(
         }
       }
 
+      let originalName = req.file ? req.file.originalname : null;
+      if (originalName) {
+        const ext = path.extname(originalName).toLowerCase();
+        if (['.zip', '.rar', '.7z'].includes(ext)) {
+          const base = originalName.slice(0, -ext.length);
+          if (base.toLowerCase().endsWith(ext)) {
+            originalName = base;
+          }
+        }
+      }
+
       const file = req.file
         ? {
             storedName: req.file.filename,
-            originalName: req.file.originalname,
+            originalName: originalName,
             size: req.file.size,
             mimeType: req.file.mimetype,
           }
