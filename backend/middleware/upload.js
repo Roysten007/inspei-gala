@@ -31,9 +31,6 @@ function fileFilter(req, file, cb) {
   if (!ALLOWED_EXT.includes(ext)) {
     return cb(new Error('Format de fichier non autorisé. Utilisez .zip, .rar ou .7z.'));
   }
-  if (!ALLOWED_MIME.includes(file.mimetype)) {
-    return cb(new Error('Type de fichier non reconnu.'));
-  }
   cb(null, true);
 }
 
