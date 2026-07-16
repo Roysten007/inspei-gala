@@ -5,6 +5,7 @@ const path = require('path');
 const { body, validationResult } = require('express-validator');
 
 const Submission = require('../models/Submission');
+const User = require('../models/User');
 const requireAdmin = require('../middleware/adminAuth');
 const { signAdminToken } = require('../utils/tokens');
 const { UPLOAD_DIR } = require('../middleware/upload');
@@ -81,6 +82,16 @@ router.get('/submissions', requireAdmin, async (req, res, next) => {
   try {
     const rows = await Submission.findAllWithUser();
     res.json({ submissions: rows.map(toClientShape) });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// ---------- GET /users ----------
+router.get('/users', requireAdmin, async (req, res, next) => {
+  try {
+    const rows = await User.findAll();
+    res.json({ users: rows });
   } catch (err) {
     next(err);
   }

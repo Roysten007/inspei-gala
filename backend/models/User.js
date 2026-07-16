@@ -39,4 +39,11 @@ function isLocked(user) {
   return user.locked_until && new Date(user.locked_until) > new Date();
 }
 
-module.exports = { findByEmail, findById, createUser, recordFailedLogin, resetLoginAttempts, isLocked };
+async function findAll() {
+  const [rows] = await getPool().query(
+    'SELECT id, name, email, phone, created_at FROM users ORDER BY created_at DESC'
+  );
+  return rows;
+}
+
+module.exports = { findByEmail, findById, createUser, recordFailedLogin, resetLoginAttempts, isLocked, findAll };

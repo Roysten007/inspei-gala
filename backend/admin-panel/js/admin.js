@@ -1,4 +1,6 @@
 let ALL_SUBMISSIONS = [];
+let ALL_USERS = [];
+let currentTab = 'submissions';
 
 const ADMIN_TOKEN_KEY = 'inspeiGalaAdminToken';
 function getAdminToken() {
@@ -78,23 +80,67 @@ function renderTable(list) {
   `;
 }
 
-function applyFilters() {
-  const q = document.getElementById('search').value.trim().toLowerCase();
-  const status = document.getElementById('statusFilter').value;
-  const filtered = ALL_SUBMISSIONS.filter(s => {
-    const matchesQuery = !q || [s.title, s.user?.name, s.user?.email].some(f => (f || '').toLowerCase().includes(q));
-    const matchesStatus = !status || s.status === status;
-    return matchesQuery && matchesStatus;
-  });
-  renderTable(filtered);
+function renderUsersTable(list) {
+  const wrap = document.getElementById('tableWrap');
+  if (!list.length) {
+    wrap.innerHTML = `<div class="empty-state"><i class="fa-solid fa-inbox" style="font-size:1.8rem;"></i><p>Aucun inscrit ne correspond.</p></div>`;
+    return;
+  }
+
+  const rows = list.map(u => {
+    const hasSub = ALL_SUBMISSIONS.some(sub => sub.user?.email === u.email);
+    return `
+      <tr>
+        <td data-label="Nom"><b>${esc(u.name)}</b></td>
+        <td data-label="Email">${esc(u.email)}</td>
+        <td data-label="Téléphone">${esc(u.phone || '—')}</td>
+        <td data-label="Projet soumis">
+          ${hasSub ? '<span class="badge selected"><i class="fa-solid fa-check"></i> Oui</span>' : '<span class="badge" style="background:rgba(200,29,63,.14);color:#ff8383;"><i class="fa-solid fa-xmark"></i> Non</span>'}
+        </td>
+        <td data-label="Inscrit le">${new Date(u.created_at).toLocaleString('fr-FR')}</td>
+      </tr>
+    `;
+  }).join('');
+
+  wrap.innerHTML = `
+    <table>
+      <thead><tr><th>Nom</th><th>Email</th><th>Téléphone</th><th>Projet soumis</th><th>Inscrit le</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+  `;
 }
 
-async function loadSubmissions() {
+function applyFilters() {
+  const q = document.getElementById('search').value.trim().toLowerCase();
+  
+  if (currentTab === 'submissions') {
+    const status = document.getElementById('statusFilter').value;
+    const filtered = ALL_SUBMISSIONS.filter(s => {
+      const matchesQuery = !q || [s.title, s.user?.name, s.user?.email].some(f => (f || '').toLowerCase().includes(q));
+      const matchesStatus = !status || s.status === status;
+      return matchesQuery && matchesStatus;
+    });
+    renderTable(filtered);
+  } else {
+    const filtered = ALL_USERS.filter(u => {
+      return !q || [u.name, u.email, u.phone].some(f => (f || '').toLowerCase().includes(q));
+    });
+    renderUsersTable(filtered);
+  }
+}
+
+async function initDashboard() {
+  document.getElementById('tableWrap').innerHTML = `<div class="loading">Chargement des données…</div>`;
   try {
-    const data = await api('submissions');
-    ALL_SUBMISSIONS = data.submissions;
+    const [subData, userData] = await Promise.all([
+      api('submissions'),
+      api('users').catch(() => ({ users: [] }))
+    ]);
+    ALL_SUBMISSIONS = subData.submissions;
+    ALL_USERS = userData.users;
+    
     renderStats(ALL_SUBMISSIONS);
-    renderTable(ALL_SUBMISSIONS);
+    applyFilters();
   } catch (err) {
     document.getElementById('tableWrap').innerHTML = `<div class="empty-state">${esc(err.message)}</div>`;
   }
@@ -132,6 +178,34 @@ async function downloadFile(id, filename) {
   }
 }
 
+const tabSubmissions = document.getElementById('tabSubmissions');
+const tabUsers = document.getElementById('tabUsers');
+
+function switchTab(tab) {
+  currentTab = tab;
+  
+  tabSubmissions.classList.toggle('active', tab === 'submissions');
+  tabUsers.classList.toggle('active', tab === 'users');
+  
+  const statusFilter = document.getElementById('statusFilter');
+  const searchInput = document.getElementById('search');
+  
+  if (tab === 'submissions') {
+    statusFilter.style.display = 'block';
+    searchInput.placeholder = 'Rechercher (titre, nom, email)…';
+  } else {
+    statusFilter.style.display = 'none';
+    searchInput.placeholder = 'Rechercher (nom, email, téléphone)…';
+  }
+  
+  applyFilters();
+}
+
+if (tabSubmissions && tabUsers) {
+  tabSubmissions.addEventListener('click', () => switchTab('submissions'));
+  tabUsers.addEventListener('click', () => switchTab('users'));
+}
+
 document.getElementById('search').addEventListener('input', applyFilters);
 document.getElementById('statusFilter').addEventListener('change', applyFilters);
 document.getElementById('logoutBtn').addEventListener('click', async () => {
@@ -140,7 +214,6 @@ document.getElementById('logoutBtn').addEventListener('click', async () => {
   window.location.href = 'login.html';
 });
 
-// Event delegation for dynamically rendered table actions (CSP blocks inline onclick/onchange).
 document.getElementById('tableWrap').addEventListener('click', (e) => {
   const btn = e.target.closest('[data-action="download"]');
   if (btn) downloadFile(btn.dataset.id, btn.dataset.filename);
@@ -150,4 +223,4 @@ document.getElementById('tableWrap').addEventListener('change', (e) => {
   if (select) updateStatus(select.dataset.id, select.value);
 });
 
-loadSubmissions();
+initDashboard();
