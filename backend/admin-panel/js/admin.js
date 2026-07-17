@@ -163,7 +163,10 @@ async function downloadFile(id, filename) {
     const res = await fetch(`${API_BASE}api/submissions/${id}/file`, {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     });
-    if (!res.ok) throw new Error('Téléchargement impossible.');
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      throw new Error(data.message || 'Téléchargement impossible.');
+    }
     const blob = await res.blob();
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');

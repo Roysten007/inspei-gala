@@ -2,6 +2,7 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const rateLimit = require('express-rate-limit');
 const path = require('path');
+const fs = require('fs');
 const { body, validationResult } = require('express-validator');
 
 const Submission = require('../models/Submission');
@@ -136,6 +137,10 @@ router.get('/submissions/:id/file', requireAdmin, async (req, res, next) => {
     }
 
     const filePath = path.join(UPLOAD_DIR, submission.file_stored_name);
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ message: "Le fichier n'existe plus sur le serveur (le disque temporaire de l'hébergeur a été réinitialisé)." });
+    }
+
     res.download(filePath, submission.file_original_name || 'projet.zip');
   } catch (err) {
     next(err);
