@@ -10,7 +10,7 @@ const { upload, UPLOAD_DIR } = require('../middleware/upload');
 const router = express.Router();
 
 function submissionDeadlinePassed() {
-  const deadline = process.env.SUBMISSION_DEADLINE || '2026-07-18T22:30:00.000Z';
+  const deadline = process.env.SUBMISSION_DEADLINE || '2026-07-18T23:25:00.000Z';
   return new Date() > new Date(deadline);
 }
 
